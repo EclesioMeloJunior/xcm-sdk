@@ -6,29 +6,26 @@ import { Provider } from '../provider';
 export type JunctionParent = "Parent"
 export type JunctionParachain = { ParaChain: number }
 export type JunctionAccountId32 = { AccountId32: { Network: string, Id: HexString } }
+export type Junction = unknown | JunctionParent | JunctionParachain | JunctionAccountId32
 
-export type MultiLocation<T> = {
+export type MultiLocationX1<J extends Junction> = {
     X1: {
-        [Proprety in keyof T]: T[Proprety]
+        [JProp in keyof J]: J[JProp]
     }
 }
 
-export type MultiLocationV0Parent = MultiLocation<JunctionParent>;
-export type MultiLocationV0Parachain = MultiLocation<JunctionParachain>
-export type MultiLocationV0AccountId32 = MultiLocation<JunctionAccountId32>
-
-type MultiLocationV0 = MultiLocation<"Parent" | JunctionParachain | JunctionAccountId32>;
+export type MultiLocation = MultiLocationX1<Junction>
 
 export type MultiAssetAll = "All";
 export type MultiAssetAllFungible = "AllFungible";
 export type MultiAssetAllNonFungible = "AllNonFungible";
 export type MultiAssetAllAbstractFungible = { id: AnyU8a };
 export type MultiAssetAllAbstractNonFungible = { class: AnyU8a };
-export type MultiAssetAllConcreteFungible = { id: MultiLocationV0 };
-export type MultiAssetAllConcreteNonFungible = { class: MultiLocationV0 };
+export type MultiAssetAllConcreteFungible = { id: MultiLocation };
+export type MultiAssetAllConcreteNonFungible = { class: MultiLocation };
 
 export type MultiAssetAbstractFungible = { id: AnyU8a, amount: number };
-export type MultiAssetConcreteFungible = { ConcreteFungible: { id?: MultiLocationV0, amount: number } };
+export type MultiAssetConcreteFungible = { ConcreteFungible: { id?: MultiLocation, amount: number } };
 
 export type MultiAsset = MultiAssetAll | MultiAssetAllFungible | MultiAssetAllNonFungible
     | MultiAssetAllAbstractFungible | MultiAssetAllAbstractNonFungible | MultiAssetAllConcreteFungible
@@ -50,7 +47,7 @@ export class XCM {
     }
 
     public async limitedTeleportAssets(
-        dst: MultiLocationV0, beneficiary: MultiLocationV0, 
+        dst: MultiLocation, beneficiary: MultiLocation, 
         ass:MultiAsset[], feeAssetItem: number = 0, weightLimit: WeightLimit): 
         Promise<SubmittableExtrinsic<'promise', ISubmittableResult> | SubmittableExtrinsic<'rxjs', ISubmittableResult>> {        
 
@@ -61,7 +58,7 @@ export class XCM {
     }
 
     public async polkadotXcmLimitedTeleportAssets(
-        dst: MultiLocationV0, beneficiary: MultiLocationV0, 
+        dst: MultiLocation, beneficiary: MultiLocation, 
         ass:MultiAsset[], feeAssetItem: number = 0, weightLimit: WeightLimit): 
         Promise<SubmittableExtrinsic<'promise', ISubmittableResult> | SubmittableExtrinsic<'rxjs', ISubmittableResult>> {        
 
