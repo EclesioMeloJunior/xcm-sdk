@@ -8,6 +8,7 @@ import { Parachain, parachains } from './xcm/parachain';
 import { Provider } from './provider';
 import { RelayChain } from './xcm/relay';
 
+// TODO: use a wallet provider
 const ROCOCO_TEST_01_ACCOUNT = "ready source ski bitter tag gap special design dial saddle muscle civil"
 const CANVA_TEST_01_ACCOUNT = "praise hundred party visual party hole slight globe between immense zoo any"
 const ENCOINTER_TEST_01_ACCOUNT = "plastic scheme there credit duck october job pause act stool disease awesome"
@@ -20,15 +21,14 @@ const ENCOINTER_ROCOCO_PARACHAIN = "wss://rococo.api.encointer.org"
 async function main() {
     await cryptoWaitReady();
     await keyring.loadAll({ ss58Format: 42, type: 'sr25519' });
-    //const rococoTest01Acc = keyring.addUri(ROCOCO_TEST_01_ACCOUNT, '123123', { name: 'TEST 01' })
-    const canvaTest01Acc = keyring.addUri(CANVA_TEST_01_ACCOUNT, '123123', { name: 'CANVA TEST 01' })
-    //const encointerTest01Acc = keyring.addUri(ENCOINTER_TEST_01_ACCOUNT, '123123', { name: 'CANVA TEST 01' })
 
-    const provider = await Provider.create(ROCOCO_RELAY_CHAIN)
+    const rococoTest01Acc = keyring.addUri(ROCOCO_TEST_01_ACCOUNT, '123123', { name: 'TEST 01' })
+    const canvaTest01Acc = keyring.addUri(CANVA_TEST_01_ACCOUNT, '123123', { name: 'CANVA TEST 01' })
+
+    const provider = await Provider.create(CANVA_PARACHAIN)
 
     const xcm = new Parachain(new XCM(provider))
-    const submitable = await xcm.teleportAssetToParachain(parachains.Canva.id,
-        "5CXTjb39NCW1s32UBMmACTejMRgniRLzy9vNky1igeZzKkJx", 1000000000000)
+    const submitable = await xcm.teleportAssetToParent("5CV8dGgSF1VsVnyNSMHNN35TmpkpjXzLFn7wfZeAnQZULQmC", 10000000000000)
 
     const hash = await submitable.signAndSend(canvaTest01Acc.pair)
     console.log(hash.toString())

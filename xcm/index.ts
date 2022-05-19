@@ -14,7 +14,15 @@ export type MultiLocationX1<J extends Junction> = {
     }
 }
 
-export type MultiLocation = MultiLocationX1<Junction>
+export type MultiLocationX2<J extends Junction, Y extends Junction> = {
+    X2: [
+        { [JProp in keyof J]: J[JProp] },
+        { [YProp in keyof Y]: Y[YProp] }
+    ]
+}
+
+export type MultiLocation = 
+    | MultiLocationX1<Junction> | MultiLocationX2<Junction, Junction>
 
 export type MultiAssetAll = "All";
 export type MultiAssetAllFungible = "AllFungible";
@@ -63,6 +71,17 @@ export class XCM {
         Promise<SubmittableExtrinsic<'promise', ISubmittableResult> | SubmittableExtrinsic<'rxjs', ISubmittableResult>> {        
 
         const xcmCall = this.provider.api.tx.polkadotXcm.limitedTeleportAssets
+        const callParams = [{ V0: dst }, { V0: beneficiary }, { V0: ass }, feeAssetItem, weightLimit];
+
+        return xcmCall(...callParams)
+    }
+
+    public async polkadotXcmLimitedReserveTransferAssets(
+        dst: MultiLocation, beneficiary: MultiLocation, 
+        ass:MultiAsset[], feeAssetItem: number = 0, weightLimit: WeightLimit): 
+        Promise<SubmittableExtrinsic<'promise', ISubmittableResult> | SubmittableExtrinsic<'rxjs', ISubmittableResult>> {        
+
+        const xcmCall = this.provider.api.tx.polkadotXcm.limitedReserveTransferAssets
         const callParams = [{ V0: dst }, { V0: beneficiary }, { V0: ass }, feeAssetItem, weightLimit];
 
         return xcmCall(...callParams)
