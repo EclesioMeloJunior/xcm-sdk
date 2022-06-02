@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node ./index.ts"
+    "start": "ts-node ./canva_to_rockmine.ts"
   },
   "keywords": [],
   "author": "",

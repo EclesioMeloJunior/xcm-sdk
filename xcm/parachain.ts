@@ -4,14 +4,6 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { X1, X2 } from './multilocation';
 
-export const parachains = {
-    Canva: {
-        id: 1002
-    },
-    Encointer: {
-        id: 1003
-    },
-}
 
 export async function resolveParachainJunction(parachainProvider: Provider): Promise<MultiLocationX1<JunctionParachain>> {
     const parachainId = await parachainProvider.api.query.parachainInfo.parachainId();
